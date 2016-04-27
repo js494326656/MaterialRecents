@@ -7,8 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jsware.recentlist.RecentsAdapter;
+import com.jsware.recentlist.RecentsList;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -26,38 +32,28 @@ public class RecentsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.materialrecents_activity_recents, container, false);
 
-        final int[] colors = new int[]{0xff7fffff, 0xffff7fff, 0xffffff7f, 0xff7f7fff, 0xffff7f7f, 0xff7fff7f};
-        final Random random = new Random();
+        List<ImageHolder> data = new ArrayList<>();
+        for (int i=0;i<5;i++) {
+            ImageHolder holder = new ImageHolder();
+            holder.name = "Item" + i;
+            holder.resId = R.drawable.mazda;
+            data.add(holder);
+        }
+
 
         RecentsList recents = (RecentsList) v.findViewById(R.id.recents);
-        recents.setAdapter(new RecentsAdapter() {
-            @Override
-            public String getTitle(int position) {
-                return "Item " + position;
-            }
+        recents.setAdapter(new RecentsAdapter<ImageHolder>(data) {
 
             @Override
-            public View getView(int position) {
-                ImageView iv = new ImageView(getActivity());
-                iv.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
-                iv.setImageResource(R.drawable.mazda);
-                iv.setBackgroundColor(0xffffffff);
-                return iv;
-            }
-
-            @Override
-            public Drawable getIcon(int position) {
-                return getResources().getDrawable(R.mipmap.ic_launcher);
-            }
-
-            @Override
-            public int getHeaderColor(int position) {
-                return 0xffffffff;
-            }
-
-            @Override
-            public int getCount() {
-                return 5;
+            public View bindHolder(int position, ImageHolder item) {
+                View container = LayoutInflater.from(getActivity()).inflate(R.layout.item_recent, null);
+                ImageView icon = (ImageView) container.findViewById(R.id.materialrecents_recentIcon);
+                icon.setImageResource(R.mipmap.ic_launcher);
+                TextView title = (TextView) container.findViewById(R.id.materialrecents_recentTitle);
+                title.setText(item.name);
+                View imageBg = container.findViewById(R.id.image_body);
+                imageBg.setBackgroundResource(item.resId);
+                return container;
             }
         });
 
@@ -69,6 +65,11 @@ public class RecentsFragment extends Fragment {
         });
 
         return v;
+    }
+
+    public class ImageHolder{
+        public String name;
+        public int resId;
     }
 
 }

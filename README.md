@@ -30,7 +30,7 @@ To include in your project, check: https://jitpack.io/#ZieIony/MaterialRecents/d
         }
     
         @Override
-        public View getView(int position) {
+        public View bindHolder(int position) {
             ImageView iv  =new ImageView(RecentsActivity.this);
             iv.setImageResource(R.drawable.mazda);
             iv.setBackgroundColor(0xffffffff);

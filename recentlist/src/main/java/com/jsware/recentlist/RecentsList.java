@@ -1,10 +1,9 @@
-package tk.zielony.materialrecents;
+package com.jsware.recentlist;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
@@ -12,11 +11,10 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.Scroller;
-import android.widget.TextView;
 
+import com.example.recentlist.R;
 import com.nineoldandroids.view.ViewHelper;
 
 /**
@@ -92,19 +90,8 @@ public class RecentsList extends FrameLayout implements GestureDetector.OnGestur
         removeAllViews();
         for (int i = 0; i < adapter.getCount(); i++) {
             final View card = View.inflate(getContext(), R.layout.materialrecents_recent_card, null);
-            TextView title = (TextView) card.findViewById(R.id.materialrecents_recentTitle);
-            title.setText(adapter.getTitle(i));
-            android.widget.ImageView icon = (android.widget.ImageView) card.findViewById(R.id.materialrecents_recentIcon);
-            Drawable drawable = adapter.getIcon(i);
-            if (drawable == null) {
-                icon.setVisibility(View.GONE);
-            } else {
-                icon.setImageDrawable(drawable);
-            }
-            View header = card.findViewById(R.id.materialrecents_recentHeader);
-            header.setBackgroundColor(adapter.getHeaderColor(i));
             ViewGroup cardContent = (ViewGroup) card.findViewById(R.id.materialrecents_recentContent);
-            cardContent.addView(adapter.getView(i));
+            cardContent.addView(adapter.bindHolder(i,adapter.getItem(i)));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
                 card.setLayerType(View.LAYER_TYPE_HARDWARE, null);
             addView(card,i,generateDefaultLayoutParams());
